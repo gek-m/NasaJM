@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="chip_width">120dp</dimen>
+    <dimen name="chip_group_horizont_space">0dp</dimen>
+    <dimen name="fab_radius">24dp</dimen>
+    <dimen name="fab_cradle_margin">7dp</dimen>
+    <dimen name="counter_max_length">20</dimen>
+    <dimen name="start_end_padding">10dp</dimen>
+</resources>
