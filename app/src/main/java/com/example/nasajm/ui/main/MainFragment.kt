@@ -1,32 +1,184 @@
 package com.example.nasajm.ui.main
 
-import androidx.lifecycle.ViewModelProvider
+import android.app.Application
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.view.*
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.example.nasajm.MainActivity
 import com.example.nasajm.R
+import com.example.nasajm.databinding.MainFragmentBinding
+import com.example.nasajm.domain.NasaRepositoryImp
+import com.example.nasajm.ui.bottomNav.BottomNavigationDrawerFragment
+import com.example.nasajm.util.visibleOrGone
+import com.example.nasajm.viewBinding
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.coroutines.flow.collect
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.main_fragment) {
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    private val viewBinding: MainFragmentBinding by viewBinding(
+        MainFragmentBinding::bind
+    )
+
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(
+            application = requireActivity().application
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null) {
+            viewModel.fetchPictureOfTheDay(0)
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
+
+        chip_today.setOnClickListener {
+            viewModel.fetchPictureOfTheDay(0)
+        }
+
+        chip_yesterday.setOnClickListener{
+            viewModel.fetchPictureOfTheDay(1)
+        }
+
+        chip_before_yesterday.setOnClickListener {
+            toast("Before Yesterday")
+            viewModel.fetchPictureOfTheDay(2)
+        }
+
+        viewBinding.inputLayout.setEndIconOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW).apply {
+                data =
+                    Uri.parse("https://en.wikipedia.org/wiki/${viewBinding.inputEditText.text.toString()}")
+            })
+        }
+        setBottomAppBar(view)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.loading.collect {
+                viewBinding.progressBar.visibleOrGone(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.data.collect {
+                it.url?.let { url ->
+                    Glide.with(viewBinding.imageView)
+                        .load(url)
+                        .into(viewBinding.imageView)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.error.collect {
+                toast(it)
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_bottom_bar, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_fav -> toast("Favourite")
+            R.id.app_bar_settings -> toast("Settings")
+            //requireActivity().supportFragmentManager.beginTransaction()
+            //    .add(R.id.container, ChipsFragment()).addToBackStack(null).commit()
+            android.R.id.home -> {
+                activity?.let {
+                    BottomNavigationDrawerFragment().show(
+                        requireActivity().supportFragmentManager,
+                        "tag"
+                    )
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun Fragment.toast(string: String?) {
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
+            setGravity(Gravity.BOTTOM, 0, 250)
+            show()
+        }
+    }
+
+    private fun setBottomAppBar(view: View) {
+        val context = activity as MainActivity
+        context.setSupportActionBar(view.findViewById(R.id.bottom_app_bar))
+        setHasOptionsMenu(true)
+        with(viewBinding) {
+            fab.setOnClickListener {
+                if (isMain) {
+                    isMain = false
+                    bottomAppBar.navigationIcon = null
+                    bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                    fab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_back_fab))
+                    bottomAppBar.replaceMenu(R.menu.menu_bottom_bar_other_screen)
+                } else {
+                    isMain = true
+                    Handler().postDelayed({
+                        bottomAppBar.navigationIcon =
+                            ContextCompat.getDrawable(
+                                context,
+                                R.drawable.ic_hamburger_menu_bottom_bar
+                            )
+                        bottomAppBar.fabAlignmentMode =
+                            BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                        fab.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                context,
+                                R.drawable.ic_plus_fab
+                            )
+                        )
+                    }, 300)
+
+                    bottomAppBar.replaceMenu(R.menu.menu_bottom_bar)
+                }
+            }
+        }
+    }
+
+    private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
 
     companion object {
         fun newInstance() = MainFragment()
+        private var isMain = true
     }
+}
 
-    private lateinit var viewModel: MainViewModel
+class MainViewModelFactory(
+    private val application: Application,
+) : ViewModelProvider.Factory {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+        MainViewModel(application, NasaRepositoryImp()) as T
 }
