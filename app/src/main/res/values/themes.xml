@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.NasaJM" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.NasaJM" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -12,5 +12,20 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="backgroundTint">@color/red_background_tint</item>
+    </style>
+
+    <color name="red_background_tint">#AC160B</color>
+    <color name="dark_green">#043C02</color>
+    <color name="light_green">#90D85C</color>
+    <color name="green">#2A9127</color>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorSecondaryVariant">@color/light_green</item>
+        <item name="colorOnSecondary">@color/green</item>
     </style>
 </resources>
