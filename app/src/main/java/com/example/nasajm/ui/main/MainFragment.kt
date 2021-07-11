@@ -1,4 +1,4 @@
-package com.example.nasajm.ui.main
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             package com.example.nasajm.ui.main
 
 import android.app.Application
 import android.content.Intent
@@ -20,14 +20,21 @@ import com.example.nasajm.R
 import com.example.nasajm.databinding.MainFragmentBinding
 import com.example.nasajm.domain.NasaRepositoryImp
 import com.example.nasajm.ui.bottomNav.BottomNavigationDrawerFragment
+import com.example.nasajm.ui.settings.SettingsFragment
+import com.example.nasajm.util.setDateInString
 import com.example.nasajm.util.visibleOrGone
 import com.example.nasajm.viewBinding
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.main_fragment.*
 import kotlinx.coroutines.flow.collect
 
 class MainFragment : Fragment(R.layout.main_fragment) {
+
+    companion object {
+        fun newInstance() = MainFragment()
+        private var isMain = true
+        const val CHIP_DATE_PATTERN = "dd-MM-yyyy"
+    }
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
@@ -54,16 +61,18 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
 
-        chip_today.setOnClickListener {
+
+        viewBinding.chipToday.setOnClickListener {
             viewModel.fetchPictureOfTheDay(0)
         }
 
-        chip_yesterday.setOnClickListener{
+        viewBinding.chipYesterday.text = setDateInString(1, CHIP_DATE_PATTERN)
+        viewBinding.chipYesterday.setOnClickListener {
             viewModel.fetchPictureOfTheDay(1)
         }
 
-        chip_before_yesterday.setOnClickListener {
-            toast("Before Yesterday")
+        viewBinding.chipBeforeYesterday.text = setDateInString(2, CHIP_DATE_PATTERN)
+        viewBinding.chipBeforeYesterday.setOnClickListener {
             viewModel.fetchPictureOfTheDay(2)
         }
 
@@ -106,10 +115,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.app_bar_fav -> toast("Favourite")
-            R.id.app_bar_settings -> toast("Settings")
-            //requireActivity().supportFragmentManager.beginTransaction()
-            //    .add(R.id.container, ChipsFragment()).addToBackStack(null).commit()
-            android.R.id.home -> {
+
+            R.id.app_bar_settings -> requireActivity().supportFragmentManager.beginTransaction()
+                .add(R.id.container, SettingsFragment()).addToBackStack(null).commit()
+
+            R.id.home -> {
                 activity?.let {
                     BottomNavigationDrawerFragment().show(
                         requireActivity().supportFragmentManager,
@@ -167,11 +177,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
-    companion object {
-        fun newInstance() = MainFragment()
-        private var isMain = true
     }
 }
 

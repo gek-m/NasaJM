@@ -20,18 +20,18 @@ class MainViewModel(
 
     private val _loading = MutableStateFlow(false)
     private val _error = MutableSharedFlow<String>()
-    private val _data = MutableStateFlow<PictureOfTheDay>(PictureOfTheDay())
+    private val _data = MutableStateFlow(PictureOfTheDay())
 
     val loading: Flow<Boolean> = _loading
     val error: Flow<String> = _error
     val data: Flow<PictureOfTheDay> = _data
 
-    fun fetchPictureOfTheDay(daysFromToday: Long) {
+    fun fetchPictureOfTheDay(minusDaysFromToday: Long) {
         _loading.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            val result = repository.getPictureOfTheDay(daysFromToday)
+            val result = repository.getPictureOfTheDay(minusDaysFromToday)
             _loading.value = false
 
             when (result) {

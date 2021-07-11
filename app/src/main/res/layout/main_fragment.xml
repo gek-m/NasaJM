@@ -64,7 +64,7 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_today"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    style="@style/AppChip"
                     android:layout_width="@dimen/chip_width"
                     android:layout_height="wrap_content"
                     android:text="@string/chip_title_today"

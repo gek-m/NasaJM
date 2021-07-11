@@ -3,13 +3,16 @@ package com.example.nasajm.domain
 import com.example.nasajm.BuildConfig
 import com.example.nasajm.network.NasaMapApi
 import com.example.nasajm.network.parseToPictureOfTheDay
+import com.example.nasajm.util.setDateInString
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class NasaRepositoryImp() : NasaRepository {
+
+    companion object {
+        const val API_DATE_PATTERN = "yyyy-MM-dd"
+    }
 
     override suspend fun getPictureOfTheDay(daysFromToday: Long): RepositoryResult<PictureOfTheDay> {
         val gson = Gson()
@@ -22,11 +25,8 @@ class NasaRepositoryImp() : NasaRepository {
         val mapApi: NasaMapApi = retrofit.create(NasaMapApi::class.java)
 
         try {
-            val current =
-                LocalDateTime.now().minusDays(daysFromToday)
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-
-            val pictureMapResponse = mapApi.getPictureOfTheDaySuspend(current)
+            val pictureMapResponse =
+                mapApi.getPictureOfTheDaySuspend(setDateInString(daysFromToday, API_DATE_PATTERN))
             return Success(pictureMapResponse.parseToPictureOfTheDay())
 
         } catch (ex: Exception) {
