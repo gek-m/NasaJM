@@ -2,9 +2,9 @@ package com.example.nasajm.ui.pages
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.nasajm.ui.pages.earth.EarthFragment
+import com.example.nasajm.ui.pages.mars.MarsFragment
 
 
 class ViewPagerAdapter(private val fragmentActivity: FragmentActivity) :
