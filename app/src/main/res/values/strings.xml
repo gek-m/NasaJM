@@ -16,4 +16,5 @@
     <string name="chip_title_theme_dark">Green theme</string>
     <string name="shared_preference_theme">SHARED_THEME</string>
     <string name="key_theme_id">THEME_ID</string>
+    <string name="images">images</string>
 </resources>

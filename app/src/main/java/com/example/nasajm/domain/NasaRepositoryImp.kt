@@ -1,6 +1,8 @@
 package com.example.nasajm.domain
 
 import com.example.nasajm.BuildConfig
+import com.example.nasajm.network.ApiEarthPicture
+import com.example.nasajm.network.ApiMarsPhotoResponse
 import com.example.nasajm.network.NasaMapApi
 import com.example.nasajm.network.parseToPictureOfTheDay
 import com.example.nasajm.util.setDateInString
@@ -14,15 +16,16 @@ class NasaRepositoryImp() : NasaRepository {
         const val API_DATE_PATTERN = "yyyy-MM-dd"
     }
 
+    private val gson = Gson()
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+
+    private val mapApi: NasaMapApi = retrofit.create(NasaMapApi::class.java)
+
+
     override suspend fun getPictureOfTheDay(daysFromToday: Long): RepositoryResult<PictureOfTheDay> {
-        val gson = Gson()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        val mapApi: NasaMapApi = retrofit.create(NasaMapApi::class.java)
 
         try {
             val pictureMapResponse =
@@ -31,6 +34,25 @@ class NasaRepositoryImp() : NasaRepository {
 
         } catch (ex: Exception) {
             return Error(ex)
+        }
+    }
+
+    override suspend fun getEarthPictures(): RepositoryResult<List<ApiEarthPicture>> {
+
+        try {
+            val earthPicturesList = mapApi.getEarthPhotoListSuspend()
+            return  Success(earthPicturesList)
+        } catch (ex: Exception){
+            return  Error(ex)
+        }
+    }
+
+    override suspend fun getMarsPictures(): RepositoryResult<ApiMarsPhotoResponse> {
+        try {
+            val marsPhoto = mapApi.getMarsPhotoListSuspend()
+            return  Success(marsPhoto)
+        } catch (ex: Exception){
+            return  Error(ex)
         }
     }
 }

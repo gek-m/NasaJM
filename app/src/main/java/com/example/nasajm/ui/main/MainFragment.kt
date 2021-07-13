@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             package com.example.nasajm.ui.main
+package com.example.nasajm.ui.main
 
 import android.app.Application
 import android.content.Intent
@@ -20,6 +20,7 @@ import com.example.nasajm.R
 import com.example.nasajm.databinding.MainFragmentBinding
 import com.example.nasajm.domain.NasaRepositoryImp
 import com.example.nasajm.ui.bottomNav.BottomNavigationDrawerFragment
+import com.example.nasajm.ui.pages.PagesActivity
 import com.example.nasajm.ui.settings.SettingsFragment
 import com.example.nasajm.util.setDateInString
 import com.example.nasajm.util.visibleOrGone
@@ -114,7 +115,15 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.app_bar_fav -> toast("Favourite")
+            R.id.app_bar_images -> activity?.let {
+                startActivity(
+                    Intent(
+                        it,
+                        PagesActivity::class.java
+                    )
+                )
+            }
+            //toast("Favourite")
 
             R.id.app_bar_settings -> requireActivity().supportFragmentManager.beginTransaction()
                 .add(R.id.container, SettingsFragment()).addToBackStack(null).commit()
