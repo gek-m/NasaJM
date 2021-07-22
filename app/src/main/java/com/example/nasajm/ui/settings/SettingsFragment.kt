@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.transition.Fade
 import com.example.nasajm.R
 import com.example.nasajm.databinding.SettingsFragmentBinding
 import com.example.nasajm.storages.ThemeStorage
@@ -28,6 +29,8 @@ class SettingsFragment : Fragment(R.layout.settings_fragment), View.OnClickListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        enterTransition = Fade()
 
         viewBinding.themePurple.setOnClickListener(this)
         viewBinding.themeGreen.setOnClickListener(this)

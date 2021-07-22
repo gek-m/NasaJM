@@ -8,4 +8,7 @@
     <dimen name="start_end_padding">10dp</dimen>
     <dimen name="picture_bottom_margin">20dp</dimen>
     <dimen name="image_margin">7dp</dimen>
+    <dimen name="recycle_item_padding">12dp</dimen>
+    <dimen name="recycle_item_text_size">30sp</dimen>
+    <dimen name="fab_default_layout_margin">15dp</dimen>
 </resources>
