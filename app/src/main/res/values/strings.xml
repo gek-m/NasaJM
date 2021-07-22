@@ -17,4 +17,6 @@
     <string name="shared_preference_theme">SHARED_THEME</string>
     <string name="key_theme_id">THEME_ID</string>
     <string name="images">images</string>
+    <string name="recycle_item_header">Header</string>
+    <string name="notes">Notes</string>
 </resources>

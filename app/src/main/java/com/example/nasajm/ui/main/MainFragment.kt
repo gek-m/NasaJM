@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -15,10 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.transition.ChangeBounds
-import androidx.transition.ChangeImageTransform
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.bumptech.glide.Glide
 import com.example.nasajm.MainActivity
 import com.example.nasajm.R
@@ -26,6 +21,7 @@ import com.example.nasajm.databinding.MainFragmentBinding
 import com.example.nasajm.domain.NasaRepositoryImp
 import com.example.nasajm.ui.bottomNav.BottomNavigationDrawerFragment
 import com.example.nasajm.ui.pages.PagesActivity
+import com.example.nasajm.ui.recycler.RecyclerActivity
 import com.example.nasajm.ui.settings.SettingsFragment
 import com.example.nasajm.util.setDateInString
 import com.example.nasajm.util.visibleOrGone
@@ -123,8 +119,14 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             R.id.app_bar_images -> activity?.let {
                 startActivity(
                     Intent(
-                        it,
-                        PagesActivity::class.java
+                        it, PagesActivity::class.java
+                    )
+                )
+            }
+            R.id.app_bar_notes -> activity?.let {
+                startActivity(
+                    Intent(
+                        it, RecyclerActivity::class.java
                     )
                 )
             }
