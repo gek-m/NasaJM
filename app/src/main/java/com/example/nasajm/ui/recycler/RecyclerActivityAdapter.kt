@@ -1,10 +1,14 @@
 package com.example.nasajm.ui.recycler
 
 import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasajm.R
@@ -91,8 +95,13 @@ class RecyclerActivityAdapter(
                 visibility = if (layoutPosition > 1) View.VISIBLE else View.INVISIBLE
             }
 
+            val spannable = SpannableStringBuilder(itemView.marsDescriptionTextView.text)
+            spannable.setSpan(ForegroundColorSpan(Color.RED), 0, 5, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            itemView.marsDescriptionTextView.setText(spannable, TextView.BufferType.SPANNABLE)
+
             itemView.marsDescriptionTextView.visibility =
                 if (dataItem.second) View.VISIBLE else View.GONE
+
             itemView.marsTextView.setOnClickListener { toggleText() }
             itemView.dragHandleImageView.setOnTouchListener { _, event ->
                 if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
