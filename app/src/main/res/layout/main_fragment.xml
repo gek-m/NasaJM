@@ -68,6 +68,7 @@
                     style="@style/AppChip"
                     android:layout_width="@dimen/chip_width"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta_stencil"
                     android:text="@string/chip_title_today"
                     android:textAlignment="center" />
 
@@ -76,6 +77,7 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="@dimen/chip_width"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta_stencil"
                     android:text="@string/chip_title_yesterday"
                     android:textAlignment="center" />
 
@@ -84,6 +86,7 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="@dimen/chip_width"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta_stencil"
                     android:text="@string/chip_title_before_yesterday"
                     android:textAlignment="center" />
             </com.google.android.material.chip.ChipGroup>
